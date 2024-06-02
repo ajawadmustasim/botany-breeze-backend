@@ -19,6 +19,10 @@ app.use(cookieParser())
 //routes import
 import userRouter from './routes/user.routes.js'
 
+// adding for testing
+app.get("/", (req, res) => {
+    return res.status(200).json("Working")
+})
 
 //routes declaration
 app.use("/api/v1/users", userRouter)
