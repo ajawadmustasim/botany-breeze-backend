@@ -251,7 +251,7 @@ const updateAccountDetails = asyncHandler(async(req, res) => {
         {
             $set: {
                 fullName: fullName,
-                phone: phone
+                phone: phone,
                 email: email
             }
         },
