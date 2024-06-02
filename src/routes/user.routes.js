@@ -7,8 +7,6 @@ import {
     changeCurrentPassword, 
     getCurrentUser, 
     updateUserDP,  
-    getUserChannelProfile, 
-    //getWatchHistory, 
     updateAccountDetails
 } from "../controllers/user.controller.js";
 import {upload} from "../middlewares/multer.middleware.js"
