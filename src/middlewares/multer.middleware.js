@@ -2,11 +2,11 @@ import multer from "multer";
 
 const storage = multer.diskStorage({
     destination: function (req, file, cb) {
-      cb(null, "./public")
+      cb(null, "./public/user")
     },
     filename: function (req, file, cb) {
-      
-      cb(null, file.fieldname)
+      const username = req.user.username;
+      cb(null, `${username}.jpg`);
     }
   })
   

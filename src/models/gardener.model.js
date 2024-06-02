@@ -6,11 +6,6 @@ const gardenerSchema = new mongoose.Schema(
             type: String,
             required: true
         },
-        gardenerID: {
-            type: Number,
-            required: true,
-            unique: true
-        },
         experience: {
             type: String
         },

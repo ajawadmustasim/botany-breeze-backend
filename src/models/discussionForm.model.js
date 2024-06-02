@@ -2,11 +2,6 @@ import mongoose from "mongoose"
 
 const discussionSchema = new mongoose.Schema(
     {
-        id: {
-            type: Number,
-            required: true,
-            unique: true
-        },
         question: {
             type: String
         },
@@ -17,6 +12,5 @@ const discussionSchema = new mongoose.Schema(
         ]
     }, {timestamps:true}
 ) 
-
 
 export const Discussion = mongoose.model("Discussion", discussionSchema)
