@@ -28,4 +28,6 @@ app.get("/", (req, res) => {
 app.use("/api/v1/users", userRouter)
 
 
+//app.use('/api', discussionRoutes);
+
 export { app }
