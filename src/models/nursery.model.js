@@ -17,10 +17,8 @@ const nurserySchema = new mongoose.Schema(
             type: String,
             required: true
         },
-        id: {
+        rating: {
             type: Number,
-            required: true,
-            unique: true
         },
         nurseryAdmin:{
             type: mongoose.Schema.Types.ObjectId,

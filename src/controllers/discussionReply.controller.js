@@ -1,5 +1,5 @@
-import DiscussionReply from "../models/discussionReply.model.js";
-import Discussion from "../models/discussion.model.js";
+import {DiscussionReply} from "../models/discussionReply.model.js";
+import {Discussion} from "../models/discussion.model.js";
 
 // Create a new reply
 const createReply = async (req, res) => {

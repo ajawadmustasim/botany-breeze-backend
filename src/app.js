@@ -18,6 +18,7 @@ app.use(cookieParser())
 
 //routes import
 import userRouter from './routes/user.routes.js'
+import discussionRouter from './routes/discussion.routes.js'
 
 // adding for testing
 app.get("/", (req, res) => {
@@ -28,6 +29,6 @@ app.get("/", (req, res) => {
 app.use("/api/v1/users", userRouter)
 
 
-//app.use('/api', discussionRoutes);
+app.use('/api/v1/discussion', discussionRouter);
 
 export { app }

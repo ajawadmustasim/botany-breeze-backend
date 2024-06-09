@@ -1,4 +1,6 @@
 import mongoose from "mongoose"
+import jwt from "jsonwebtoken"
+import bcrypt from "bcrypt"
 
 const userSchema = new mongoose.Schema(
     {
@@ -24,6 +26,7 @@ const userSchema = new mongoose.Schema(
         },
         userType: {
             type: String,
+            enum: ["customer", "botanist", "nursery admin"],
             default: "customer"
         },
         phone: {

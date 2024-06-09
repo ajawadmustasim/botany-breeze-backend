@@ -4,6 +4,8 @@ import { User} from "../models/user.model.js"
 import { ApiResponse } from "../utils/ApiResponse.js";
 import jwt from "jsonwebtoken"
 import mongoose from "mongoose";
+//import fs from "fs";
+import {upload} from "../middlewares/multer.middleware.js";
 
 
 const generateAccessAndRefereshTokens = async(userId) =>{
@@ -35,8 +37,8 @@ const registerUser = asyncHandler( async (req, res) => {
     // return res
 
 
-    const {fullName, email, username, password, phone } = req.body
-    //console.log("email: ", email);
+    const { fullName, email, username, password, phone } = req.body;
+    console.log("email: ", email);
 
     if (
         [fullName, email, username, password, phone].some((field) => field?.trim() === "")
@@ -55,7 +57,7 @@ const registerUser = asyncHandler( async (req, res) => {
 
     const user = await User.create({
         fullName,
-        email, 
+        email,
         password,
         phone,
         username: username.toLowerCase()
@@ -73,7 +75,7 @@ const registerUser = asyncHandler( async (req, res) => {
         new ApiResponse(200, createdUser, "User registered Successfully")
     )
 
-} )
+} );
 
 const loginUser = asyncHandler(async (req, res) =>{
     // req body -> data
@@ -211,8 +213,6 @@ const refreshAccessToken = asyncHandler(async (req, res) => {
 const changeCurrentPassword = asyncHandler(async(req, res) => {
     const {oldPassword, newPassword} = req.body
 
-    
-
     const user = await User.findById(req.user?._id)
     const isPasswordCorrect = await user.isPasswordCorrect(oldPassword)
 
@@ -264,52 +264,77 @@ const updateAccountDetails = asyncHandler(async(req, res) => {
     .json(new ApiResponse(200, user, "Account details updated successfully"))
 });
 
-const uploadImage = (req, res) => {
-    upload.single('file')(req, res, (err) => {
-      if (err) {
-        return res.status(500).send('An error occurred while uploading the file.');
-      }
-      if (!req.file) {
-        return res.status(400).send('No file uploaded.');
-      }
-      res.send('File uploaded successfully.');
-    });
-  };
+// const uploadImage = (req, res) => {
+//     upload.single('file')(req, res, (err) => {
+//       if (err) {
+//         return res.status(500).send(`An error occurred while uploading the file. ${err}`);
+//       }
+//       if (!req.file) {
+//         return res.status(400).send('No file uploaded.');
+//       }
+//       res.send('File uploaded successfully.');
+//     });
+//   };
 
-const updateUserDP = asyncHandler(async(req, res) => {
+// const updateUserDP = asyncHandler(async(req, res) => {
 
-    upload.single('file')(req, res, (err) => {
-        if (err) {
-          return res.status(500).send('An error occurred while uploading the file.');
-        }
-        if (!req.file) {
-          return res.status(400).send('No file uploaded.');
-        }
-        res.send('File uploaded successfully.');
-      });
+//     await upload.single('file')(req, res, (err) => {
+//         if (err) {
+//           return res.status(500).send('An error occurred while uploading the file.');
+//         }
+//         if (!req.userDP) {
+//           return res.status(400).send('No file uploaded.');
+//         }
+//         res.send('File uploaded successfully.');
+//       });
     
 
-    if (!userDP.url) {
-        throw new ApiError(400, "Error while uploading user DP")
+//     if (!file.url) {
+//         throw new ApiError(400, "Error while uploading user DP")
         
-    }
+//     }
 
-    const user = await User.findByIdAndUpdate(
-        req.user?._id,
-        {
-            $set:{
-                coverImage: coverImage.url
-            }
-        },
-        {new: true}
-    ).select("-password")
+//     const user = await User.findByIdAndUpdate(
+//         req.user?._id,
+//         {
+//             $set:{
+//                 userDP: userDP.url
+//             }
+//         },
+//         {new: true}
+//     ).select("-password")
 
-    return res
-    .status(200)
-    .json(
-        new ApiResponse(200, user, "User DP updated successfully")
-    )
-})
+//     return res
+//     .status(200)
+//     .json(
+//         new ApiResponse(200, user, "User DP updated successfully")
+//     )
+// })
+
+const updateUserDP = asyncHandler(async (req, res) => {
+    upload.single('file')(req, res, async (err) => {
+        // if (err) {
+        //     return res.status(500).send(`An error occurred while uploading the file. ${err}`);
+        // }
+        if (!req.file) {
+            return res.status(400).send('No file uploaded.');
+        }
+
+        const fileUrl = `./public/user/${req.file.filename}`;
+
+        const user = await User.findByIdAndUpdate(
+            req.user._id,
+            { $set: { userDP: fileUrl } },
+            { new: true }
+        ).select("-password");
+
+        if (!user) {
+            throw new ApiError(400, "Error while updating user DP");
+        }
+
+        return res.status(200).json(new ApiResponse(200, user, "User DP updated successfully"));
+    });
+});
 
 //will change this code for purchase history
 
