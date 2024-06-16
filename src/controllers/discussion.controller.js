@@ -6,39 +6,48 @@ import { Discussion } from "../models/discussion.model.js";
 import { DiscussionReply } from "../models/discussionReply.model.js";
 
 // Create a new discussion
-const createDiscussion = async (req, res) => {
-    const { question, createdBy } = req.body;
+const createDiscussion = asyncHandler(async (req, res) => {
+    const { question } = req.body;
+
+    // Ensure the user is authenticated
+    if (!req.user) {
+        throw new ApiError(401, "Unauthorized");
+    }
 
     try {
         const newDiscussion = new Discussion({
             question,
-            createdBy,
+            createdBy: req.user._id,
         });
 
         await newDiscussion.save();
 
         res.status(201).json(
-            new ApiResponse(200, newDiscussion, "Question posted Successfully")
+            new ApiResponse(200, newDiscussion, "Question posted successfully")
         );
     } catch (error) {
         throw new ApiError(400, "Unable to post question");
     }
-};
+});
 
 // Get all discussions
-const getDiscussions = async (req, res) => {
+const getDiscussions = asyncHandler(async (req, res) => {
     try {
-        const discussions = await Discussion.find().populate('createdBy').populate({
-            path: 'replays',
-            populate: { path: 'replyBy' }
-        });
+        const discussions = await Discussion.find()
+            .populate('createdBy', 'fullName username') // Include only necessary fields from the user
+            .populate({
+                path: 'replies',
+                populate: { path: 'replyBy', select: 'fullName username' } // Include only necessary fields from the replier
+            })
+            .select('question createdBy replies'); // Ensure question, createdBy, and replies are included
+
         res.status(200).json(
-            new ApiResponse(200, discussion, "Discussion form fetched Successfully")
+            new ApiResponse(200, discussions, "Discussions fetched successfully")
         );
     } catch (error) {
         throw new ApiError(404, "Unable to fetch discussions");
     }
-};
+});
 
 // Get a single discussion by ID
 const getDiscussionById = async (req, res) => {

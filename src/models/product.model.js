@@ -6,14 +6,6 @@ const productSchema = new mongoose.Schema(
             type: String,
             required: true
         },
-        id: {
-            type: Number,
-            required: true,
-            unique: true
-        },
-        specie: {
-            type: String
-        },
         description: {
             type: String,
         },

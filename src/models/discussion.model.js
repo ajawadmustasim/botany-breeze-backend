@@ -9,12 +9,12 @@ const discussionSchema = new mongoose.Schema(
             type: mongoose.Schema.Types.ObjectId,
             ref: 'User',
           },
-        replays: [
+        replies: [
         {
             type: mongoose.Schema.Types.ObjectId,
             ref: 'DiscussionReply',
         },
-        ], // Array of replays
+        ], // Array of replies
     }, {timestamps:true}
 ); 
 

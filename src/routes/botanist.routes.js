@@ -32,7 +32,7 @@ router.route("/update-dp").patch(verifyJWT, upload.single("userDP"), updateUserD
 
 // Botanist-specific routes
 router.route("/register-botanist").post(registerBotanist);
-router.route("/botanist/:id").get(verifyJWT, getBotanistDetails);
+router.route("/botanistDetails").get(verifyJWT, getBotanistDetails);
 router.route("/botanist/update-verification-status").patch(verifyJWT, updateBotanistVerificationStatus);
 router.route("/botanist/update-rating").patch(verifyJWT, updateBotanistRating);
 

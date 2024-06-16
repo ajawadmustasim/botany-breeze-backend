@@ -1,5 +1,7 @@
 import express from 'express';
 
+import { verifyJWT } from "../middlewares/auth.middleware.js";
+
 import { 
     createDiscussion, 
     getDiscussions, 
@@ -19,8 +21,8 @@ import {
 const router = express.Router();
 
 // Discussion routes
-router.post('/discussions', createDiscussion);
-router.get('/discussions', getDiscussions);
+router.route("/discussion").post(verifyJWT, createDiscussion);
+router.route("/discussions").get(getDiscussions);
 router.get('/discussions/:id', getDiscussionById);
 router.put('/discussions/:id', updateDiscussion);
 router.delete('/discussions/:id', deleteDiscussion);

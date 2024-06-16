@@ -74,6 +74,7 @@ const registerBotanist = asyncHandler(async (req, res) => {
         email,
         password,
         phone,
+        qualification,
         username: username.toLowerCase(),
         userType: "botanist"
     });
@@ -97,7 +98,11 @@ const registerBotanist = asyncHandler(async (req, res) => {
 });
 
 const getBotanistDetails = asyncHandler(async (req, res) => {
-    const botanist = await Botanist.findById(req.params.id).populate("userDetails", "-password -refreshToken");
+    // Use req.user._id to find the botanist associated with the authenticated user
+    const botanist = await Botanist.findOne({ userDetails: req.user._id }).populate({
+        path: 'userDetails',
+        select: '-password -refreshToken'
+    });
 
     if (!botanist) {
         throw new ApiError(404, "Botanist not found");

@@ -18,6 +18,7 @@ app.use(cookieParser())
 
 //routes import
 import userRouter from './routes/user.routes.js'
+import botanistRouter from './routes/botanist.routes.js'
 import discussionRouter from './routes/discussion.routes.js'
 
 // adding for testing
@@ -27,7 +28,7 @@ app.get("/", (req, res) => {
 
 //routes declaration
 app.use("/api/v1/users", userRouter)
-
+app.use("/api/v1/botanist", botanistRouter)
 
 app.use('/api/v1/discussion', discussionRouter);
 
