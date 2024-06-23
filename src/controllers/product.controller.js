@@ -2,29 +2,56 @@ import { Product } from '../models/product.model.js';
 import { asyncHandler } from '../utils/asyncHandler.js';
 import { ApiResponse } from '../utils/ApiResponse.js';
 import { ApiError } from '../utils/ApiError.js';
+import { User } from '../models/user.model.js';
+import {uploadProduct} from "../middlewares/multerProduct.middleware.js";
+
 
 // Create a new product
 const createProduct = asyncHandler(async (req, res) => {
-    const { name, id, description, price, category, picture } = req.body;
+    const { name, description, price, category } = req.body;
+    const userId = req.user._id; // Assuming req.user contains the logged-in user's info
 
-    const existingProduct = await Product.findOne({ id });
-
-    if (existingProduct) {
-        throw new ApiError(409, 'Product with this ID already exists');
+    // Check if the user is logged in
+    if (!userId) {
+        throw new ApiError(401, "User not logged in");
     }
 
-    const newProduct = new Product({
-        name,
-        id,
-        description,
-        price,
-        category,
-        picture
-    });
+        try {
+            // Create the new product
+            const newProduct = new Product({
+                name,
+                description,
+                price,
+                category,
+                owner: userId
+            });
 
-    await newProduct.save();
+            await newProduct.save();
 
-    res.status(201).json(new ApiResponse(201, newProduct, 'Product created successfully'));
+            // Find the user by ID
+            const user = await User.findById(userId);
+
+            if (!user) {
+                throw new ApiError(404, "User not found");
+            }
+
+            // Initialize the products array if it doesn't exist
+            if (!user.products) {
+                user.products = [];
+            }
+
+            // Add the new product to the user's products array
+            user.products.push(newProduct._id);
+
+            // Save the updated user
+            await user.save();
+
+            res.status(201).json(
+                new ApiResponse(201, newProduct, 'Product created and added to user successfully')
+            );
+        } catch (error) {
+            throw new ApiError(500, "Unable to create product");
+        }
 });
 
 // Get all products

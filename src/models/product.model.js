@@ -6,6 +6,10 @@ const productSchema = new mongoose.Schema(
             type: String,
             required: true
         },
+        owner:{
+            type: mongoose.Schema.Types.ObjectId,
+            ref: "User"
+        },
         description: {
             type: String,
         },
@@ -17,6 +21,9 @@ const productSchema = new mongoose.Schema(
             type: String,
             enum: ["plant", "flower"],
             default: "plant"
+        },
+        rating: {
+            type: Number
         },
         picture: {
             type: String

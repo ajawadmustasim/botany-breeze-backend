@@ -20,6 +20,8 @@ app.use(cookieParser())
 import userRouter from './routes/user.routes.js'
 import botanistRouter from './routes/botanist.routes.js'
 import discussionRouter from './routes/discussion.routes.js'
+import productRouter from './routes/product.routes.js'
+
 
 // adding for testing
 app.get("/", (req, res) => {
@@ -31,5 +33,6 @@ app.use("/api/v1/users", userRouter)
 app.use("/api/v1/botanist", botanistRouter)
 
 app.use('/api/v1/discussion', discussionRouter);
+app.use('/api/v1/product', productRouter);
 
 export { app }

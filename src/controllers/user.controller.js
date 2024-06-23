@@ -312,9 +312,9 @@ const updateAccountDetails = asyncHandler(async(req, res) => {
 
 const updateUserDP = asyncHandler(async (req, res) => {
     upload.single('file')(req, res, async (err) => {
-        // if (err) {
-        //     return res.status(500).send(`An error occurred while uploading the file. ${err}`);
-        // }
+        if (err) {
+            return res.status(500).send(`An error occurred while uploading the file. ${err}`);
+        }
         if (!req.file) {
             return res.status(400).send('No file uploaded.');
         }
@@ -391,6 +391,26 @@ const updateUserDP = asyncHandler(async (req, res) => {
 //     )
 // })
 
+const getCurrentUserType = asyncHandler(async (req, res) => {
+    const user = await User.findById(req.user._id).select('userType');
+
+    if (!user) {
+        throw new ApiError(404, "User not found");
+    }
+
+    res.status(200).json(new ApiResponse(200, user.userType, "User type fetched successfully"));
+});
+
+const getUserTypeById = asyncHandler(async (req, res) => {
+    const user = await User.findById(req.params.id).select('userType');
+
+    if (!user) {
+        throw new ApiError(404, "User not found");
+    }
+
+    res.status(200).json(new ApiResponse(200, user.userType, "User type fetched successfully"));
+});
+
 
 export {
     registerUser,
@@ -400,5 +420,7 @@ export {
     changeCurrentPassword,
     getCurrentUser,
     updateAccountDetails,
-    updateUserDP
+    updateUserDP,
+    getCurrentUserType,
+    getUserTypeById
 }

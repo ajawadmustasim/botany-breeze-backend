@@ -7,7 +7,9 @@ import {
     changeCurrentPassword, 
     getCurrentUser, 
     updateUserDP,  
-    updateAccountDetails
+    updateAccountDetails,
+    getCurrentUserType,
+    getUserTypeById
 } from "../controllers/user.controller.js";
 import {upload} from "../middlewares/multer.middleware.js"
 import { verifyJWT } from "../middlewares/auth.middleware.js";
@@ -27,6 +29,9 @@ router.route("/current-user").get(verifyJWT, getCurrentUser)
 router.route("/update-account").post(verifyJWT, updateAccountDetails)
 
 router.route("/update-db").patch(verifyJWT, upload.single("userDP"), updateUserDP)
+
+router.route("/user-type").get(verifyJWT, getCurrentUserType)
+router.route("/user-type/:id").get(verifyJWT, getUserTypeById)
 
 //router.route("/history").get(verifyJWT, getWatchHistory)
 

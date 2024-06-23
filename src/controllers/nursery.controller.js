@@ -10,9 +10,9 @@ import { Gardener } from "../models/gardener.model.js";
 
 // Additional functionalities for nursery admin
 const registerNursery = asyncHandler(async (req, res) => {
-    const { nurseryDetails, nurseryAddress, nurseryCity, nurseryContact, id, nurseryAdmin } = req.body;
+    const { nurseryDetails, nurseryAddress, nurseryCity, nurseryContact, nurseryAdmin } = req.body;
 
-    if ([nurseryDetails, nurseryAddress, nurseryContact, id, nurseryAdmin].some((field) => field?.trim() === "")) {
+    if ([nurseryDetails, nurseryAddress, nurseryContact, nurseryAdmin].some((field) => field?.trim() === "")) {
         throw new ApiError(400, "All fields are required");
     }
 
@@ -27,7 +27,6 @@ const registerNursery = asyncHandler(async (req, res) => {
         nurseryAddress,
         nurseryCity,
         nurseryContact,
-        id,
         nurseryAdmin
     });
 
