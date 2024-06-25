@@ -4,7 +4,8 @@ import { verifyJWT } from "../middlewares/auth.middleware.js";
 
 import { 
     createDiscussion, 
-    getDiscussions, 
+    getDiscussions,
+    getUserDiscussions, 
     getDiscussionById, 
     updateDiscussion, 
     deleteDiscussion 
@@ -23,6 +24,7 @@ const router = express.Router();
 // Discussion routes
 router.route("/discussion").post(verifyJWT, createDiscussion);
 router.route("/discussions").get(getDiscussions);
+router.route('/my-discussions').get(verifyJWT, getUserDiscussions);
 router.get('/discussions/:id', getDiscussionById);
 router.put('/discussions/:id', updateDiscussion);
 router.delete('/discussions/:id', deleteDiscussion);

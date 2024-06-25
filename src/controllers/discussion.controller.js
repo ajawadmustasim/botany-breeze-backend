@@ -49,6 +49,30 @@ const getDiscussions = asyncHandler(async (req, res) => {
     }
 });
 
+// Get all discussions of the current user
+const getUserDiscussions = asyncHandler(async (req, res) => {
+    try {
+        const userId = req.user._id;
+
+        const discussions = await Discussion.find({ createdBy: userId })
+            .populate('createdBy', '-password -refreshToken')
+            .populate({
+                path: 'replies',
+                populate: { path: 'replyBy', select: '-password -refreshToken' }
+            });
+
+        if (!discussions) {
+            throw new ApiError(404, 'No discussions found for the current user');
+        }
+
+        res.status(200).json(
+            new ApiResponse(200, discussions, 'Discussions fetched successfully')
+        );
+    } catch (error) {
+        throw new ApiError(500, 'Unable to fetch discussions');
+    }
+});
+
 // Get a single discussion by ID
 const getDiscussionById = async (req, res) => {
     const { id } = req.params;
@@ -116,6 +140,7 @@ const deleteDiscussion = async (req, res) => {
 export {
     createDiscussion,
     getDiscussions,
+    getUserDiscussions,
     getDiscussionById,
     updateDiscussion,
     deleteDiscussion
